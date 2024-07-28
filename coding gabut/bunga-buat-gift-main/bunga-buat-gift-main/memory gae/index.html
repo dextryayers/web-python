@@ -1,0 +1,100 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Memory Game</h2>
+    <div class="game"></div>
+    <button class="reset" onclick="resetGame()">Reset</button>
+    <p>Attempts: <span id="attempts">0</span></p>
+</div>
+
+
+<script>
+    const emojis = [
+        "😋",
+        "😋",
+        "🤕",
+        "🤕",
+        "🙃",
+        "🙃",
+        "😉",
+        "😉",
+        "😢",
+        "😢",
+        "😳",
+        "😳",
+        "🫤",
+        "🫤",
+        "😆",
+        "😆",
+    ];
+    var attempts = 0;
+    var shuf_emojis = emojis.sort(() => (Math.random() > 0.5 ? 2 : -1));
+    for (var i = 0; i < emojis.length; i++) {
+        let box = document.createElement("div");
+        box.className = "item";
+        box.innerHTML = shuf_emojis[i];
+
+        box.onclick = function () {
+            if (!this.classList.contains("boxOpen")){
+                attempts += 1;
+                document.getElementById("attempts").innerHTML = attempts;
+            }
+
+            this.classList.add("boxOpen");
+            setTimeout(function () {
+                if (document.querySelectorAll(".boxOpen").length > 1) {
+                    if (
+                        document.querySelectorAll(".boxOpen")[0].innerHTML ==
+                        document.querySelectorAll(".boxOpen")[1].innerHTML
+                    ) {
+                      document
+                        .querySelectorAll(".boxOpen")[0]
+                        .classList.add("boxMatch");
+                      document
+                        .querySelectorAll(".boxOpen")[1]
+                        .classList.add("boxMatch");
+
+                      document
+                        .querySelectorAll(".boxOpen")[1]
+                        .classList.remove("boxOpen");
+                      document
+                        .querySelectorAll(".boxOpen")[0]
+                        .classList.remove("boxOpen");
+                      if (
+                        document.querySelectorAll(".boxMatch").length ==
+                        emojis.length
+                      ) {
+                        alert("You win!");
+                      }
+                    } else {
+                        document
+                        .querySelectorAll(".boxOpen")[1]
+                        .classList.remove("boxOpen");
+                        document
+                        .querySelectorAll(".boxOpen")[0]
+                        .classList.remove("boxOpen");
+                    }
+                }
+            }, 500);
+        };
+        document.querySelector(".game").appendChild(box);
+    }
+
+    function resetGame() {
+        attempts = 0;
+        document.getElementById("attempts").innerText = attempts;
+        var shuf_emojis = emojis.sort(() => (Math.random() > 0.5 ? 2 : -1));
+        var boxes = document.querySelectorAll(".item");
+        boxes.forEach(function (box, index) {
+            box.innerHTML = shuf_emojis[index];
+            box.classList.remove("boxOpen", "boxMatch");
+        });
+    }
+</script>
